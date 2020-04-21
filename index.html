@@ -176,11 +176,11 @@
 <h3 id="2-实现方式一：继承Thread类"><a href="#2-实现方式一：继承Thread类" class="headerlink" title="2.实现方式一：继承Thread类"></a>2.实现方式一：继承Thread类</h3><p>步骤：<br>（1）编写线程类去继承java.lang.Thread类<br>（2）必须重写父类的publlic void run(){ }<br>在run()方法中需要编写，你这个线程所需要完成的任务。<br>  (3)创建线程对象–&gt;MyThread my = new MyThread();<br>（4）启动线程–&gt;my.start();</p>
 <h3 id="3-实现方法二：实现Runable接口"><a href="#3-实现方法二：实现Runable接口" class="headerlink" title="3.实现方法二：实现Runable接口"></a>3.实现方法二：实现Runable接口</h3><p>步骤：<br>（1）编写线程类去实现java.lang.Runable接口<br>（2）必须实现接口的抽象方法：public void run();<br>在run()方法中需要编写，你这个线程所需要完成的任务。<br>（3）创建线程类对象<br>（4）启动线程：start();<br>这个start()方法只有Thread类中才有，说明我们要用Thread类的对象<br>Thread t = new Thread();<br>t.start();</p>
 <h3 id="4-为什么要有第二种实现的方法？"><a href="#4-为什么要有第二种实现的方法？" class="headerlink" title="4.为什么要有第二种实现的方法？"></a>4.为什么要有第二种实现的方法？</h3><p>原因之一是因为Java只支持单继承当一个类继承别的类的时候如果需要使用多线程的方法只有用第二种方法。</p>
-<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p><img src="../pictures/1.%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%9B%BE.png" alt="avatar"></p>
+<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p><img src="/.com//1.%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%9B%BE.png" alt="线程生命周期图"></p>
 <h2 id="Java-lang-Thread类常用的API"><a href="#Java-lang-Thread类常用的API" class="headerlink" title="Java.lang.Thread类常用的API"></a>Java.lang.Thread类常用的API</h2><p>（1）public void run();子类必须重写，他的方法体也称为线程体，即线程的任务代码。<br>（2）public void start();线程启动必须用它<br>（3）public static void sleep(毫秒);休眠<br>（4）public String getName();线程的名称<br>    主线程的名称：main<br>    其他线程的名称：默认是Thread-编号<br>（5）public static Thread currentThread();获取当前线程的对象<br>（6）线程优先级<br>    getPriority()<br>    SetPriority()<br>    优先级的范围：MIN_PRIORITY - MAX_PRIORITY（一共十个等级）<br>（7）public void interrupt()中断线程<br>（8）public void join();加塞<br>（9）public static void yield();暂停当前的线程，让出本次cpu资源，加入下一次的cpu抢夺中。（效果不是特别大）</p>
 <h2 id="关于volatile的使用方"><a href="#关于volatile的使用方" class="headerlink" title="关于volatile的使用方"></a>关于volatile的使用方</h2><pre><code>当循环的时候去主存里面找变量，而不是在缓存中。</code></pre><h2 id="线程安全问题"><a href="#线程安全问题" class="headerlink" title="线程安全问题"></a>线程安全问题</h2><pre><code>当多个线程使用“共享数据”时，就会有线程的安全问题。
 当一个线程修改了“共享数据”时，是会影响其他的线程的。
-![avatar](../pictures/1.线程生命周期图.png)
+![线程安全问题分析](多线程初级/2.线程安全问题分析.png)
 如图所示：例如当有三个窗口同时卖十张票的时候。窗口一先走到位置后切换成就绪状态。
 窗口二强到CPU资源开始运行之后total的值为0，由于不符合total&gt;0所以窗口二结束。
 这时候窗口一继续执行但是于是total的值等于-1。</code></pre><h3 id="如何解决？"><a href="#如何解决？" class="headerlink" title="如何解决？"></a>如何解决？</h3><pre><code>加锁
@@ -191,7 +191,7 @@
 （1）可以是任意类型的对象。
 （2）必须是这几个线程要使用同一个锁对象。
 锁的代码范围的选择: 太大太小都不行，只锁一次任务。
-![avatar](../pictures/3.同步代码块的设置.jpg)
+![同步代码块的设置](多线程初级/3.同步代码块的设置.png)
 如图所示：如果while循环被锁住的话，范围太大别的进程进不来结果就是一个线程执行到底。
 所以需要把while循环拿出来，但是当条件在外面的时候可能出现在判断while的时候线程切换了，
 结果就是可能出现负数，所以把判断条件放在锁里。使得线程安全。</code></pre><h4 id="同步方法"><a href="#同步方法" class="headerlink" title="同步方法"></a>同步方法</h4><pre><code>语法格式：【修饰符】syncjroized 返回值类型 方法名([形参列表])throws 异常列表{  }
