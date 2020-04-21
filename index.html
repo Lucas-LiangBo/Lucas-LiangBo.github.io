@@ -190,16 +190,30 @@
 锁对象的选择：
 （1）可以是任意类型的对象。
 （2）必须是这几个线程要使用同一个锁对象。
-锁的代码范围的选择: 太大太小都不行，只锁一次任务。</code></pre><h4 id="同步方法"><a href="#同步方法" class="headerlink" title="同步方法"></a>同步方法</h4><pre><code>语法格式：【修饰符】syncjroized 返回值类型 方法名([形参列表])throws 异常列表{  }
+锁的代码范围的选择: 太大太小都不行，只锁一次任务。
+![avatar](../pictures/3.同步代码块的设置.jpg)
+如图所示：如果while循环被锁住的话，范围太大别的进程进不来结果就是一个线程执行到底。
+所以需要把while循环拿出来，但是当条件在外面的时候可能出现在判断while的时候线程切换了，
+结果就是可能出现负数，所以把判断条件放在锁里。使得线程安全。</code></pre><h4 id="同步方法"><a href="#同步方法" class="headerlink" title="同步方法"></a>同步方法</h4><pre><code>语法格式：【修饰符】syncjroized 返回值类型 方法名([形参列表])throws 异常列表{  }
 同步方法的锁对象，程序员无法选择：
 （1）非静态方法：this
 （2）静态方法当前类的class对象。</code></pre><h4 id="死锁问题"><a href="#死锁问题" class="headerlink" title="死锁问题"></a>死锁问题</h4><pre><code>两个线程，互相占有对方想要的锁不放手。</code></pre><h2 id="线程通信问题"><a href="#线程通信问题" class="headerlink" title="线程通信问题"></a>线程通信问题</h2><pre><code>线程通信是用来解决生产者和消费者的问题。
 生产者与消费者问题：
 （1）共享数据：就会有线程安全问题，就需要同步
-（2）共享区域大小固定，有限的：就需要用到“写作”，线程通信。
+（2）共享区域大小固定，有限的：就需要用到“协作”，线程通信。
 Object类中有：
 （1）wait():必须由锁对象(线程的监视器对象)来调用。
-（2）notify()：作用就是唤醒一个正在等待的线程。唤醒的只能是想要获取同一个锁对象的线程。</code></pre>
+（2)  notify()：作用就是唤醒一个正在等待的线程。唤醒的只能是想要获取同一个锁对象的线程。
+（3）notifyAll():唤醒所有的线程。</code></pre><h3 id="什么时候释放锁"><a href="#什么时候释放锁" class="headerlink" title="什么时候释放锁"></a>什么时候释放锁</h3><pre><code>（1）同步代码块或同步方法中的代码运行完了
+（2）wait();
+（3）遇到异常，但是没有处理，这个线程死了，会释放锁</code></pre><h3 id="什么情况下不会释放锁？"><a href="#什么情况下不会释放锁？" class="headerlink" title="什么情况下不会释放锁？"></a>什么情况下不会释放锁？</h3><pre><code>（1）sleep();
+（2）yield();
+（3）suspand();(已过时)</code></pre><h3 id="wait-和sleep-的区别？"><a href="#wait-和sleep-的区别？" class="headerlink" title="wait()和sleep()的区别？"></a>wait()和sleep()的区别？</h3><pre><code>（1）wait()释放锁和sleep()不释放
+（2）wait()是Object类中声明，sleep()是Thread类中声明的
+（3）wait()必须有“锁，监视器”对象来调用，如果由别的对象调用会报illegleMoniterStateException
+         sleep()是静态方法，Thread类名调用就可以。
+（4）wait()使得当前线程进入阻塞状态后，由notify唤醒
+             sleep()是的当前线程进入阻塞状态后，时间到或被interrupt()醒来。</code></pre>
       
 
       
